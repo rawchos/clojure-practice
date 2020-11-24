@@ -4,6 +4,12 @@
                                  fact
                                  =>]]))
 
-(facts "about 'is-working?'"
-       (fact "should be true if everything setup right"
-             (bo/is-working?) => true))
+(facts "about 'recur-sum'"
+       (fact "should add up the numbers correctly"
+             (bo/recur-sum 7) => 28
+             (bo/recur-sum 10) => 55))
+
+(facts "about 'reduce-sum'"
+       (fact "should add up the numbers correctly"
+             (bo/reduce-sum 7) => 28
+             (bo/reduce-sum 10) => 55))
