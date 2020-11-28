@@ -1,9 +1,5 @@
 (ns ctci.big-o)
 
-;; TODO: Remove this, it's just for verifying everything is setup
-(defn is-working? []
-  true)
-
 ;; This section takes examples in the CtCI section and rewrites
 ;; them in clojure.
 
