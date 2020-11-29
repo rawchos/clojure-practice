@@ -29,4 +29,13 @@
   [url]
   (s/replace url #" " "%20"))
 
-;; TODO: Implement urlify without using s/replace.
+(defn convert-space [char]
+  (if (= \space char)
+    "%20"
+    char))
+
+(defn more-urlify
+  "Another implementation of urlify that doesn't rely on
+   clojure.string/replace."
+  [url]
+  (apply str (map convert-space url)))

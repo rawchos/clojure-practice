@@ -33,3 +33,7 @@
 (facts "about 'urlify'"
        (fact "should replace spaces with '%20'"
              (aas/urlify "blah de blah") => "blah%20de%20blah"))
+
+(facts "about 'more-urlify'"
+       (fact "should replace spaces with '%20'"
+             (aas/more-urlify "blah de blah") => "blah%20de%20blah"))
