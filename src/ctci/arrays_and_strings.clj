@@ -17,7 +17,16 @@
 (defn is-permutation? 
   "Check's to see if the strings are permutations of each other by
    first converting to lower case, then comparing the frequencies of
-   each character. This method doesn't do anything with spaces."
+   each character. This function doesn't do anything with spaces."
   [first-string second-string]
   (= (lower-freqs first-string)
      (lower-freqs second-string)))
+
+;; Question 1.3: Write a method to replace spaces with '%20'.
+(defn urlify 
+  "Replaces spaces with '%20'. Does an in-place replace using the
+   clojure.string/replace function."
+  [url]
+  (s/replace url #" " "%20"))
+
+;; TODO: Implement urlify without using s/replace.
