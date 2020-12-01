@@ -51,7 +51,8 @@
 (defn is-odd? [number]
   (pos? (mod number 2)))
 
-;; TODO: Could this be better? Think on it a bit.
+;; Could this be better? Think on it a bit.
+;; Answer: Yes, it definitely can. See succint-is-palindrome?
 (defn is-palindrome? [string]
   (loop [counts (-> (remove-spaces string)
                     (s/lower-case)
@@ -81,3 +82,8 @@
       (odds)
       (count)
       (<= 1)))
+
+;; Question 1.5: One Away. There are 3 types of edits that can be
+;; performed on strings: insert a character, remove a character,
+;; or replace a character. Given a string, write a function to
+;; determine if they are 1 or 0 edits away from each other.
