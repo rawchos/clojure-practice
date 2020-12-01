@@ -54,6 +54,22 @@
              (aas/is-palindrome? "RACe Car") => true
              (aas/is-palindrome? "TACOcat") => true))
 
+(facts "about 'succint-is-palindrome?'"
+       (fact "should report correctly if there are palindrome permutations"
+             (aas/succint-is-palindrome? "tacocat") => true
+             (aas/succint-is-palindrome? "aaccott") => true
+             (aas/succint-is-palindrome? "racecar") => true
+             (aas/succint-is-palindrome? "raccecar") => false
+             (aas/succint-is-palindrome? "abbbaa") => false)
+       (fact "should ignore whitespaces when checking permutations"
+             (aas/succint-is-palindrome? "race car") => true
+             (aas/succint-is-palindrome? "taco cat") => true
+             (aas/succint-is-palindrome? "t a c o c a t") => true
+             (aas/succint-is-palindrome? "taco catt") => false)
+       (fact "should ignore casing when checking permutations"
+             (aas/succint-is-palindrome? "RACe Car") => true
+             (aas/succint-is-palindrome? "TACOcat") => true))
+
 (facts "about 'is-odd?'"
        (fact "odd numbers are odd"
              (aas/is-odd? 1) => true
@@ -68,3 +84,9 @@
        (fact "should remove spaces from strings"
              (aas/remove-spaces "blah de blah") => "blahdeblah"
              (aas/remove-spaces "t a c o c a t") => "tacocat"))
+
+(facts "about 'odds'"
+       (fact "should only give the odd numbers"
+             (aas/odds [1 3 4 6 7]) => '(1 3 7)
+             (aas/odds [2 4 6 8]) => '()
+             (aas/odds '(1 3 5 7 9)) => '(1 3 5 7 9)))

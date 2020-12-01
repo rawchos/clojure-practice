@@ -65,3 +65,19 @@
                                (inc odds)
                                odds))
         true))))
+
+;; Yeah, so, there's no need to use loop and recur to
+;; traverse the count of occurences of each letter and look
+;; for the count of odd ones. We already have the list, just
+;; filter that list for only odd occurences and then count those.
+(defn odds [sequence]
+  (filter is-odd? sequence))
+
+(defn succint-is-palindrome? [string]
+  (-> (remove-spaces string)
+      (s/lower-case)
+      (frequencies)
+      (vals)
+      (odds)
+      (count)
+      (<= 1)))
