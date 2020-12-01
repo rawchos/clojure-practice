@@ -37,3 +37,34 @@
 (facts "about 'more-urlify'"
        (fact "should replace spaces with '%20'"
              (aas/more-urlify "blah de blah") => "blah%20de%20blah"))
+
+(facts "about 'is-palindrome?'"
+       (fact "should report correctly if there are palindrome permutations"
+             (aas/is-palindrome? "tacocat") => true
+             (aas/is-palindrome? "aaccott") => true
+             (aas/is-palindrome? "racecar") => true
+             (aas/is-palindrome? "raccecar") => false
+             (aas/is-palindrome? "abbbaa") => false)
+       (fact "should ignore whitespaces when checking permutations"
+             (aas/is-palindrome? "race car") => true
+             (aas/is-palindrome? "taco cat") => true
+             (aas/is-palindrome? "t a c o c a t") => true
+             (aas/is-palindrome? "taco catt") => false)
+       (fact "should ignore casing when checking permutations"
+             (aas/is-palindrome? "RACe Car") => true
+             (aas/is-palindrome? "TACOcat") => true))
+
+(facts "about 'is-odd?'"
+       (fact "odd numbers are odd"
+             (aas/is-odd? 1) => true
+             (aas/is-odd? 3) => true
+             (aas/is-odd? 999) => true)
+       (fact "even numbers are not odd"
+             (aas/is-odd? 2) => false
+             (aas/is-odd? 0) => false
+             (aas/is-odd? 1000) => false))
+
+(facts "about 'remove-spaces'"
+       (fact "should remove spaces from strings"
+             (aas/remove-spaces "blah de blah") => "blahdeblah"
+             (aas/remove-spaces "t a c o c a t") => "tacocat"))

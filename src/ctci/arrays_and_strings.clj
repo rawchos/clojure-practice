@@ -9,7 +9,7 @@
     (= (count char-set)
        (count low-string))))
 
-;; Question 1.2: Given two strings, write a method to determine if
+;; Question 1.2: Given two strings, write a function to determine if
 ;; one is a permutation of the other.
 (defn lower-freqs [string]
   (frequencies (s/lower-case string)))
@@ -22,7 +22,7 @@
   (= (lower-freqs first-string)
      (lower-freqs second-string)))
 
-;; Question 1.3: Write a method to replace spaces with '%20'.
+;; Question 1.3: Write a function to replace spaces with '%20'.
 (defn urlify 
   "Replaces spaces with '%20'. Does an in-place replace using the
    clojure.string/replace function."
@@ -39,3 +39,29 @@
    clojure.string/replace."
   [url]
   (apply str (map convert-space url)))
+
+;; Question 1.4: Write a function to determine if the string passed
+;; in is a permutation of a palindrome. You can ignore whitespace
+;; and it doesn't have to be limited to dictionary words.
+(defn remove-spaces [string]
+  (s/replace string #" " ""))
+
+;; Yes, clojure has an odd? function. This is just writing out
+;; my own implementation for the fun of it.
+(defn is-odd? [number]
+  (pos? (mod number 2)))
+
+;; TODO: Could this be better? Think on it a bit.
+(defn is-palindrome? [string]
+  (loop [counts (-> (remove-spaces string)
+                    (s/lower-case)
+                    (frequencies)
+                    (vals))
+         odds   0]
+    (if (> odds 1)
+      false
+      (if-let [count (first counts)]
+        (recur (rest counts) (if (is-odd? count)
+                               (inc odds)
+                               odds))
+        true))))
