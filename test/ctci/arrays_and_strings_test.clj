@@ -90,3 +90,11 @@
              (aas/odds [1 3 4 6 7]) => '(1 3 7)
              (aas/odds [2 4 6 8]) => '()
              (aas/odds '(1 3 5 7 9)) => '(1 3 5 7 9)))
+
+(facts "about 'one-away?'"
+       (fact "should be true if the strings are 1 character away from each other"
+             ; (aas/one-away? "pale" "ple") => true
+             (aas/one-away? "pales" "pale") => true
+             (aas/one-away? "pale" "bale") => true)
+       (fact "should be false if the strings require more than 1 character adjustment"
+             (aas/one-away? "pale" "bake") => false))
