@@ -99,9 +99,21 @@
        (fact "should be false if the strings require more than 1 character adjustment"
              (aas/one-away? "pale" "bake") => false))
 
-;; TODO: Implement these tests
-(facts "about 'in-str?'")
+(facts "about 'in-str?'"
+       (fact "should be true if the char is in the string"
+             (aas/in-str? "rick" "c") => true)
+       (fact "should be false if the char is not in the string"
+             (aas/in-str? "morty" "c") => false))
 
-(facts "about 'remove-str'")
+(facts "about 'remove-str'"
+       (fact "should remove the first occurence of the char in the string"
+             (aas/remove-str "archer" "r") => "acher")
+       (fact "should be the same string if the char isn't found"
+             (aas/remove-str "lana" "r") => "lana"))
 
-(facts "about 'str-diff'")
+(facts "about 'str-diff'"
+       (fact "should report values correctly"
+             (aas/str-diff "rick" "morty") => ["ick" "moty" "r"]
+             (aas/str-diff "archer" "lana") => ["rcher" "lna" "a"]
+             (aas/str-diff "tina" "dina") => ["t" "d" "ina"]
+             (aas/str-diff "blah" "none") => ["blah" "none" ""]))
