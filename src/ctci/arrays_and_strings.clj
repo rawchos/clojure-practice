@@ -128,3 +128,9 @@
              (>= 1 (count only-b)))
       true
       false)))
+
+;; Question 1.6: String Compression. Implement a function to perform
+;; basic string compression using the counts of repeated characters.
+;; If the compressed string is the same size or larger than the original,
+;; then return the original uncompressed.
+;; EX: aabcccccaaa -> a2b1c5a3
