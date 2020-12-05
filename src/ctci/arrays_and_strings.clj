@@ -1,6 +1,5 @@
 (ns ctci.arrays-and-strings
-  (:require [clojure.string :as s]
-            [clojure.data :as d]))
+  (:require [clojure.string :as s]))
 
 ;; Question 1.1; Determine if a string passed in is all
 ;; unique characters.
