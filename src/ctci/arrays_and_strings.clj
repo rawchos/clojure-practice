@@ -88,8 +88,6 @@
 ;; performed on strings: insert a character, remove a character,
 ;; or replace a character. Given a string, write a function to
 ;; determine if they are 1 or 0 edits away from each other.
-;; TODO: This isn't working right. If there's a difference in
-;; the middle, diff is reporting the entire rest wrong
 (defn in-str?
   "Determines if a character is found in a string"
   [str char]
@@ -100,17 +98,16 @@
   [str char]
   (s/replace-first str (re-pattern char) ""))
 
-;; TODO: Convert this to use in-str? and remove-str
 (defn str-diff [str-a str-b]
   (loop [chars  (s/split str-a #"")
          only-a str-a
          only-b str-b
          both   ""]
     (if-let [this-char (first chars)]
-      (if (re-find (re-pattern this-char) only-b)
+      (if (in-str? only-b this-char)
         (recur (rest chars)
-               (s/replace-first only-a (re-pattern this-char) "")
-               (s/replace-first only-b (re-pattern this-char) "")
+               (remove-str only-a this-char)
+               (remove-str only-b this-char)
                (format "%s%s" both this-char))
         (recur (rest chars)
                only-a
@@ -118,16 +115,16 @@
                both))
       [only-a only-b both])))
 
-;; TODO: Update this to use str-diff. Won't be dealing with vectors
-;; anymore, only strings.
 (defn one-away?
-  "This implementation relies on the clojure.data/diff function to
-   determine the differences in the 2 strings. We effectively remove
-   all characters that are the same then evaluate what's left to see
-   if we can make 1 or less changes to have the strings be equal."
+  "This implementation relied on the clojure.data/diff function to
+   determine the differences in the 2 strings, but because of a quirk
+   in data/diff, it wasn't handling string diffs as expected. Now it
+   relies on the str-diff function. We effectively remove all characters
+   that are the same then evaluate what's left to see if we can make 1 or
+   less changes to have the strings be equal."
   [first-string second-string]
-  (let [[only-a only-b _] (d/diff (seq first-string) (seq second-string))]
-    (if (and (>= 1 (count (remove nil? only-a)))
-             (>= 1 (count (remove nil? only-b))))
+  (let [[only-a only-b _] (str-diff first-string second-string)]
+    (if (and (>= 1 (count only-a))
+             (>= 1 (count only-b)))
       true
       false)))

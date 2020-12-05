@@ -93,8 +93,15 @@
 
 (facts "about 'one-away?'"
        (fact "should be true if the strings are 1 character away from each other"
-             ; (aas/one-away? "pale" "ple") => true
+             (aas/one-away? "pale" "ple") => true
              (aas/one-away? "pales" "pale") => true
              (aas/one-away? "pale" "bale") => true)
        (fact "should be false if the strings require more than 1 character adjustment"
              (aas/one-away? "pale" "bake") => false))
+
+;; TODO: Implement these tests
+(facts "about 'in-str?'")
+
+(facts "about 'remove-str'")
+
+(facts "about 'str-diff'")
