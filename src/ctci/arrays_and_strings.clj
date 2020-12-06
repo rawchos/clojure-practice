@@ -114,6 +114,13 @@
                both))
       [only-a only-b both])))
 
+;; Note: I was thinking of this on my hike today and realized that
+;; I don't consider rearranging characters as an edit. I'm not sure
+;; if that's correct or not in the spirit of the question but it
+;; seems right to me. I may come back to this at a later date and
+;; add a function that doesn't allow rearranging characters. Or at
+;; least considers it an edit when you move a character. I don't
+;; know, we'll see.
 (defn one-away?
   "This implementation relied on the clojure.data/diff function to
    determine the differences in the 2 strings, but because of a quirk
@@ -133,3 +140,36 @@
 ;; If the compressed string is the same size or larger than the original,
 ;; then return the original uncompressed.
 ;; EX: aabcccccaaa -> a2b1c5a3
+
+;; Note: Here's a first pass. It's kinda gnarly. I'll think on it a
+;; bit and see if it can be refined.
+(defn compress [string]
+  (if (<= (count string) 2)
+    string
+    (let [chars-to-process (s/split string #"")]
+      (loop [{:keys [previous-char
+                     remaining-chars
+                     char-count
+                     compressed-string] :as state} {:previous-char     (first chars-to-process)
+                                                    :remaining-chars   (rest chars-to-process)
+                                                    :original-string   string
+                                                    :char-count        1
+                                                    :compressed-string ""}]
+        (if-let [this-char (first remaining-chars)]
+          (if (= this-char previous-char)
+            (recur (assoc state 
+                          :remaining-chars (rest remaining-chars)
+                          :char-count (inc char-count)))
+            (recur (assoc state
+                          :remaining-chars   (rest remaining-chars)
+                          :previous-char     this-char
+                          :compressed-string (format "%s%s%d"
+                                                     compressed-string
+                                                     previous-char
+                                                     char-count)
+                          :char-count        1)))
+          (let [new-string (format "%s%s%d" compressed-string previous-char char-count)
+                original-string (:original-string state)]
+            (if (>= (count new-string) (count original-string))
+              original-string
+              new-string)))))))
