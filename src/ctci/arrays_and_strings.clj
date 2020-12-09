@@ -173,3 +173,28 @@
             (if (>= (count new-string) (count original-string))
               original-string
               new-string)))))))
+
+;; Question 1.7: Rotate Matrix: Given an image represented by an N x N matrix,
+;; where each pixel in the image is represented by an integer, write a function
+;; to rotate the image by 90 degrees.
+;; Note: Instead of using a 2 dimensional array (int[][]), I'm going to use
+;; a sequence of sequences since this is clojure.
+;; Ex: [[01 02 03 04]
+;;      [05 06 07 08]
+;;      [09 10 11 12]]
+
+(defn build-grid [width height]
+  (partition width (map inc (range (* width height)))))
+
+;; First pass, handles grids of varying sizes.
+(defn rotate [grid]
+  (let [column-order (-> (first grid)
+                         (count)
+                         (range))
+        row-order    (-> (count grid)
+                         (range)
+                         (reverse))]
+    (for [x column-order]
+      (for [y row-order]
+        (-> (nth grid y)
+            (nth x))))))

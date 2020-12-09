@@ -117,3 +117,17 @@
              (aas/str-diff "archer" "lana") => ["rcher" "lna" "a"]
              (aas/str-diff "tina" "dina") => ["t" "d" "ina"]
              (aas/str-diff "blah" "none") => ["blah" "none" ""]))
+
+(facts "about 'compress'"
+       (fact "should return the original string if the compressed string is the same size or larger"
+             (aas/compress "a") => "a"
+             (aas/compress "aa") => "aa"
+             (aas/compress "ab") => "ab"
+             (aas/compress "abcd") => "abcd"
+             (aas/compress "abcdd") => "abcdd"
+             (aas/compress "aaabcd") => "aaabcd")
+       (fact "should compress the string if it makes sense"
+             (aas/compress "aaa") => "a3"
+             (aas/compress "aaabcccccaafffd") => "a3b1c5a2f3d1"))
+
+;; TODO: Add tests for aas/rotate
