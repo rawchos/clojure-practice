@@ -130,4 +130,21 @@
              (aas/compress "aaa") => "a3"
              (aas/compress "aaabcccccaafffd") => "a3b1c5a2f3d1"))
 
-;; TODO: Add tests for aas/rotate
+;; Note: (aas/build-grid 3 4) will build a 3x4 grid. The values will be
+;;       numbered from 1 to (* 3 4).
+;; Ex: ((1 2 3)
+;;      (4 5 6)
+;;      (7 8 9)
+;;      (10 11 12))
+(facts "about 'rotate'"
+       (fact "should rotate the grid by 90 degrees"
+             (aas/rotate (aas/build-grid 3 4)) => '((10 7 4 1)
+                                                    (11 8 5 2)
+                                                    (12 9 6 3))
+             (aas/rotate (aas/build-grid 3 3)) => '((7 4 1)
+                                                    (8 5 2)
+                                                    (9 6 3))
+             (aas/rotate (aas/build-grid 1 1)) => '((1))
+             (aas/rotate (aas/build-grid 1 2)) => '((2 1))
+             (aas/rotate (aas/build-grid 2 2)) => '((3 1)
+                                                    (4 2))))
