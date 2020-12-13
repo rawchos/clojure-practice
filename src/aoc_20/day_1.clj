@@ -26,6 +26,23 @@
 ;; In your expense report, what is the product of the three entries that
 ;; sum to 2020?
 
+(defn sum-hash [expenses]
+  (loop [expenses expenses
+         m {}]
+    (if-let [x (first expenses)]
+      (recur (rest expenses) (into m (for [y (rest expenses)]
+        {(+ x y) [x y]})))
+      m)))
+
+(defn part-2 [expenses]
+  (let [m (sum-hash expenses)]
+    (loop [expenses expenses]
+      (if-let [x (first expenses)]
+        (if-let [[y z] (get m (- 2020 x))]
+          (* x y z)
+          (recur (rest expenses)))
+        0))))
+
 (def example-input [1721 979 366 299 675 1456])
 
 (def day-1-input [1863 1750 1767 1986 1180 1719 1946 1866 1939 1771
