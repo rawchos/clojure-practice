@@ -1,5 +1,6 @@
 (ns aoc-20.day-3
-  (:require [clojure.string :as s]))
+  (:require [clojure.string :as s]
+            [aoc-20.util :as util]))
 
 ;; --- Day 3: Toboggan Trajectory ---
 ;; With the toboggan login problems resolved, you set off toward the
@@ -123,22 +124,32 @@
 ;; of parameters (slopes) to loop through. Then multiply the results
 ;; together. Maybe rename this function to accept the parameters and have
 ;; part 2 call it. Figure out the row stepping (1 vs 2).
-(defn part-2 [input]
-  (->> (let [column-width (count (first input))
-             slope-right  3]
-         (loop [rows-left (range (count input))
+(def slope-patterns [{:slope-right 1 :slope-down 1}
+                     {:slope-right 3 :slope-down 1}
+                     {:slope-right 5 :slope-down 1}
+                     {:slope-right 7 :slope-down 1}
+                     {:slope-right 1 :slope-down 2}])
+
+(defn count-trees [grid {:keys [slope-right slope-down]}]
+  (->> (let [column-width (count (first grid))]
+         (loop [rows-left (range 0 (count grid) slope-down)
                 column    0
                 steps     []]
            (if-let [row (first rows-left)]
              (recur (rest rows-left)
                     (next-column column slope-right column-width)
-                    (if (tree? (-> (nth input row)
+                    (if (tree? (-> (nth grid row)
                                    (nth column)))
                       (conj steps "X")
                       (conj steps "O")))
              steps)))
        (filter #(= "X" %))
        (count)))
+
+(defn part-2 [grid slope-patterns]
+  (->> (for [slope slope-patterns]
+         (count-trees grid slope))
+       (reduce *)))
 
 (def day3-example-input ["..##......."
                          "#...#...#.."
@@ -154,6 +165,9 @@
 (defn build-example-input []
   (for [row day3-example-input]
     (s/split row #"")))
+
+; (part-2 (for [row (util/read-lines "day3-input.txt")]
+;           (s/split row #"")) slope-patterns)
 
 ;; (let [grid (for [row (aoc-20.util/read-lines "day3-input.txt")]
 ;;              (s/split row #""))]
