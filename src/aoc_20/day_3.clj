@@ -99,6 +99,47 @@
        (filter #(= "X" %))
        (count)))
 
+;; --- Part Two ---
+;; Time to check the rest of the slopes - you need to minimize the
+;; probability of a sudden arboreal stop, after all.
+;;
+;; Determine the number of trees you would encounter if, for each of the
+;; following slopes, you start at the top-left corner and traverse the map
+;; all the way to the bottom:
+;; 
+;; Right 1, down 1.
+;; Right 3, down 1. (This is the slope you already checked.)
+;; Right 5, down 1.
+;; Right 7, down 1.
+;; Right 1, down 2.
+;; 
+;; In the above example, these slopes would find 2, 7, 3, 4, and 2 tree(s)
+;; respectively; multiplied together, these produce the answer 336.
+;; 
+;; What do you get if you multiply together the number of trees encountered
+;; on each of the listed slopes?
+
+;; TODO: Modify this. part-2 needs to take a grid and then maybe a map
+;; of parameters (slopes) to loop through. Then multiply the results
+;; together. Maybe rename this function to accept the parameters and have
+;; part 2 call it. Figure out the row stepping (1 vs 2).
+(defn part-2 [input]
+  (->> (let [column-width (count (first input))
+             slope-right  3]
+         (loop [rows-left (range (count input))
+                column    0
+                steps     []]
+           (if-let [row (first rows-left)]
+             (recur (rest rows-left)
+                    (next-column column slope-right column-width)
+                    (if (tree? (-> (nth input row)
+                                   (nth column)))
+                      (conj steps "X")
+                      (conj steps "O")))
+             steps)))
+       (filter #(= "X" %))
+       (count)))
+
 (def day3-example-input ["..##......."
                          "#...#...#.."
                          ".#....#..#."
