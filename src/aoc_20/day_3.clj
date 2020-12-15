@@ -1,4 +1,5 @@
-(ns aoc-20.day-3)
+(ns aoc-20.day-3
+  (:require [clojure.string :as s]))
 
 ;; --- Day 3: Toboggan Trajectory ---
 ;; With the toboggan login problems resolved, you set off toward the
@@ -69,3 +70,50 @@
 ;; 
 ;; Starting at the top-left corner of your map and following a slope of
 ;; right 3 and down 1, how many trees would you encounter?
+(defn tree? [thing]
+  (= "#" thing))
+
+(defn next-column 
+  "This function assumes a zero-based index and will wrap around once
+   we pass the width of the column."
+  [current adjust width]
+  (let [next (+ current adjust)]
+    (if (>= next width)
+      (- next width)
+      next)))
+
+(defn part-1 [input]
+  (->> (let [column-width (count (first input))
+             slope-right  3]
+         (loop [rows-left (range (count input))
+                column    0
+                steps     []]
+           (if-let [row (first rows-left)]
+             (recur (rest rows-left)
+                    (next-column column slope-right column-width)
+                    (if (tree? (-> (nth input row)
+                                   (nth column)))
+                      (conj steps "X")
+                      (conj steps "O")))
+             steps)))
+       (filter #(= "X" %))
+       (count)))
+
+(def day3-example-input ["..##......."
+                         "#...#...#.."
+                         ".#....#..#."
+                         "..#.#...#.#"
+                         ".#...##..#."
+                         "..#.##....."
+                         ".#.#.#....#"
+                         ".#........#"
+                         "#.##...#..."
+                         "#...##....#"
+                         ".#..#...#.#"])
+(defn build-example-input []
+  (for [row day3-example-input]
+    (s/split row #"")))
+
+;; (let [grid (for [row (aoc-20.util/read-lines "day3-input.txt")]
+;;              (s/split row #""))]
+;;   (part-1 grid))
