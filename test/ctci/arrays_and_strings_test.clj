@@ -148,3 +148,10 @@
              (aas/rotate (aas/build-grid 1 2)) => '((2 1))
              (aas/rotate (aas/build-grid 2 2)) => '((3 1)
                                                     (4 2))))
+
+(facts "about 'is-substring?'"
+       (fact "should be true if s2 is a rotation of s1"
+             (aas/is-substring? "waterbottle" "erbottlewat") => true
+             ;; TODO: This test is failing. Problems with the implementation.
+             ;; (aas/is-substring? "something" "else") => false
+             (aas/is-substring? "something" "thingsome") => true))

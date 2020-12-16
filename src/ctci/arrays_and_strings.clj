@@ -198,3 +198,15 @@
       (for [y row-order]
         (-> (nth grid y)
             (nth x))))))
+
+;; Question 1.8: Zero Matrix - Write an algorithm such that if an
+;; element in an M x N matrix is 0, it's entire row and column
+;; are set to 0.
+
+;; Question 1.9: String Rotation - Assume you have a method isSubstring
+;; which checks if one word is a substring of another. Given two strings,
+;; s1 and s2, write code to check if s2 is a rotation of s1 using only
+;; one call to isSubstring (e.g. "waterbottle" is a rotation of
+;; "erbottlewat").
+(defn is-substring? [s1 s2]
+  (s/includes? (str s2 s1) s1))
