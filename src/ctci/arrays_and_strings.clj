@@ -209,4 +209,5 @@
 ;; one call to isSubstring (e.g. "waterbottle" is a rotation of
 ;; "erbottlewat").
 (defn is-substring? [s1 s2]
-  (s/includes? (str s2 s1) s1))
+  (and (= (count s1) (count s2))
+       (s/includes? (str s2 s2) s1)))

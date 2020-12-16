@@ -152,6 +152,5 @@
 (facts "about 'is-substring?'"
        (fact "should be true if s2 is a rotation of s1"
              (aas/is-substring? "waterbottle" "erbottlewat") => true
-             ;; TODO: This test is failing. Problems with the implementation.
-             ;; (aas/is-substring? "something" "else") => false
+             (aas/is-substring? "something" "else") => false
              (aas/is-substring? "something" "thingsome") => true))
