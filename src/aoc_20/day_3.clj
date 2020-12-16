@@ -120,10 +120,6 @@
 ;; What do you get if you multiply together the number of trees encountered
 ;; on each of the listed slopes?
 
-;; TODO: Modify this. part-2 needs to take a grid and then maybe a map
-;; of parameters (slopes) to loop through. Then multiply the results
-;; together. Maybe rename this function to accept the parameters and have
-;; part 2 call it. Figure out the row stepping (1 vs 2).
 (def slope-patterns [{:slope-right 1 :slope-down 1}
                      {:slope-right 3 :slope-down 1}
                      {:slope-right 5 :slope-down 1}
@@ -166,9 +162,9 @@
   (for [row day3-example-input]
     (s/split row #"")))
 
-; (part-2 (for [row (util/read-lines "day3-input.txt")]
-;           (s/split row #"")) slope-patterns)
+(defn day3-input []
+  (for [row (util/read-lines "day3-input.txt")]
+    (s/split row #"")))
 
-;; (let [grid (for [row (aoc-20.util/read-lines "day3-input.txt")]
-;;              (s/split row #""))]
-;;   (part-1 grid))
+; (part-1 (day3-input))
+; (part-2 (day3-input) slope-patterns)
