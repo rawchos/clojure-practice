@@ -175,3 +175,39 @@
 
 ; (def test-passport "hcl:#cfa07d eyr:2025 pid:166559648\niyr:2011 ecl:brn hgt:59in")
 ; (part-1 (read-input "day4-input.txt"))
+(defn to-int [v]
+  (if v (Integer/parseInt v) v))
+
+(defn valid-byr? [v]
+  (if-let [byr (to-int (re-find #"^\d{4}$" v))]
+    (and (>= byr 1920)
+         (<= byr 2002))
+    false))
+
+(defn valid-value? [k v]
+  (case k
+    :byr (valid-byr? v)
+    true))
+
+;; Using loop rather than reduce-kv here because I want to break out
+;; on the first invalid value we encounter.
+(defn valid-values? [passport]
+  (loop [pairs passport]
+    (if-let [[k v] (first pairs)]
+      (if (valid-value? k v)
+        (recur (rest pairs))
+        false)
+      true)))
+
+(defn strict-valid-passport? [passport]
+  (let [parsed-passport (-> (newline->space passport)
+                            (parse-passport))]
+      (and (required-keys? (keys parsed-passport))
+           (valid-values? parsed-passport))))
+
+(defn part-2 [batch]
+  (->> (for [passport (s/split batch #"\n\n")]
+         (when (strict-valid-passport? passport)
+           true))
+       (remove nil?)
+       (count)))

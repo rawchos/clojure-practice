@@ -29,3 +29,38 @@
        (fact "should be false if required keys are missing"
              (d4/required-keys? '(:byr :eyr :hcl)) => false
              (d4/required-keys? '(:none)) => false))
+
+(facts "about 'to-int'"
+       (fact "should be nil if nil is passed in"
+             (d4/to-int nil) => nil)
+       (fact "should parse to int"
+             (d4/to-int "7") => 7))
+
+(facts "about 'valid-byr?'"
+       (fact "should be only 4 digits"
+             (d4/valid-byr? "192") => false
+             (d4/valid-byr? "19201") => false
+             (d4/valid-byr? "abc1920") => false
+             (d4/valid-byr? "1920abc") => false)
+       (fact "should be greater than or equal to 1920"
+             (d4/valid-byr? "1919") => false
+             (d4/valid-byr? "1920") => true
+             (d4/valid-byr? "1921") => true)
+       (fact "should be less than or equal to 2002"
+             (d4/valid-byr? "2001") => true
+             (d4/valid-byr? "2002") => true
+             (d4/valid-byr? "2003") => false))
+
+(facts "about 'valid-value?'"
+       (fact "should be true if the key requires no validation"
+             (d4/valid-value? :none "blah") => true)
+       (fact "should determine if valid byr"
+             (d4/valid-value? :byr "2002") => true
+             (d4/valid-value? :byr "2003") => false))
+
+(facts "about 'valid-values?'"
+       (fact "should validate all values"
+             (d4/valid-values? {:none "blah"
+                                :byr "2002"}) => true
+             (d4/valid-values? {:none "blah"
+                                :byr "2003"}) => false))
