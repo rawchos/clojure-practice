@@ -178,15 +178,51 @@
 (defn to-int [v]
   (if v (Integer/parseInt v) v))
 
+(defn valid-date? [v digits begin end]
+  (let [pattern (re-pattern (str "^\\d{" digits "}$"))]
+    (if-let [date (to-int (re-find pattern v))]
+      (and (>= date begin)
+           (<= date end))
+      false)))
+
 (defn valid-byr? [v]
-  (if-let [byr (to-int (re-find #"^\d{4}$" v))]
-    (and (>= byr 1920)
-         (<= byr 2002))
+  (valid-date? v 4 1920 2002))
+
+(defn valid-iyr? [v]
+  (valid-date? v 4 2010 2020))
+
+(defn valid-eyr? [v]
+  (valid-date? v 4 2020 2030))
+
+(def ecls #{"amb" "blu" "brn" "gry" "grn" "hzl" "oth"})
+(defn valid-ecl? [v]
+  (boolean (ecls v)))
+
+(defn valid-hgt? [v]
+  (if-let [[_ hgt scale] (re-find #"^(\d+)(in|cm)$" v)]
+    (let [size (to-int hgt)]
+      (if (= scale "cm")
+        (and (>= size 150)
+             (<= size 193))
+        (and (>= size 59)
+             (<= size 76))))
     false))
+
+(defn valid-hcl? [v]
+  (some? (re-find #"#(\d|[a-f]){6}$" v)))
+
+(defn valid-pid? [v]
+  (boolean (re-find #"^[0-9]{9}$" v)))
 
 (defn valid-value? [k v]
   (case k
     :byr (valid-byr? v)
+    :iyr (valid-iyr? v)
+    :eyr (valid-eyr? v)
+    :hgt (valid-hgt? v)
+    :hcl (valid-hcl? v)
+    :ecl (valid-ecl? v)
+    :pid (valid-pid? v)
     true))
 
 ;; Using loop rather than reduce-kv here because I want to break out
@@ -211,3 +247,5 @@
            true))
        (remove nil?)
        (count)))
+
+; (part-2 (read-input "day4-input.txt"))
