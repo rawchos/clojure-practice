@@ -1,7 +1,12 @@
-(ns day-5)
+(ns aoc-20.day-5
+  (:require [clojure.string :as s]
+            [aoc-20.util :as util]))
 
 (defn read-input [filename]
   (slurp (str "src/aoc_20/inputs/" filename)))
+
+(defn get-input [filename]
+  (util/read-lines filename))
 
 ;; --- Day 5: Binary Boarding ---
 ;; You board your plane only to discover a new problem: you dropped your
@@ -60,3 +65,46 @@
 ;; 
 ;; As a sanity check, look through your list of boarding passes. What is
 ;; the highest seat ID on a boarding pass?
+(defn midpoint [min max]
+  (let [dist (- max min)]
+    (- max (/ dist 2))))
+
+(defn find-thing [find-type chars]
+  (let [compare-char (if (= :row find-type) "F" "L")
+        maximum-range (if (= :row find-type) 128 8)]
+    (loop [chars chars
+           min-range 0
+           max-range maximum-range]
+      (if-let [char (first chars)]
+        (if (= compare-char char)
+          (recur (rest chars) min-range (midpoint min-range max-range))
+          (recur (rest chars) (midpoint min-range max-range) max-range))
+        (dec max-range)))))
+
+(defn find-row [chars]
+  (find-thing :row chars))
+
+(defn find-seat [chars]
+  (find-thing :seat chars))
+
+(defn seat-id [row seat]
+  (-> (* row 8)
+      (+ seat)))
+
+(defn parse-ticket [ticket]
+  (let [chars (s/split ticket #"")
+        row   (find-row (subvec chars 0 7))
+        seat  (find-seat (subvec chars 7))]
+    {(seat-id row seat) [row seat]}))
+
+(defn part-1 [tickets]
+  (->> (into {} (map parse-ticket tickets))
+       (keys)
+       (sort >)
+       (first)))
+
+; (def ticket "FBFBBFFRLR")
+
+; (parse-ticket "BFFFBBFRRR")
+; (part-1 (get-input "day5-example-input.txt"))
+; (part-1 (get-input "day5-input.txt"))
