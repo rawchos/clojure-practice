@@ -1,5 +1,6 @@
 (ns aoc-20.day-5
-  (:require [clojure.string :as s]
+  (:require [clojure.set :refer [difference]]
+            [clojure.string :as s]
             [aoc-20.util :as util]))
 
 (defn read-input [filename]
@@ -103,8 +104,40 @@
        (sort >)
        (first)))
 
-; (def ticket "FBFBBFFRLR")
+;; --- Part Two ---
+;; Ding! The "fasten seat belt" signs have turned on. Time to find your
+;; seat.
+;; 
+;; It's a completely full flight, so your seat should be the only missing
+;; boarding pass in your list. However, there's a catch: some of the seats
+;; at the very front and back of the plane don't exist on this aircraft,
+;; so they'll be missing from your list as well.
+;; 
+;; Your seat wasn't at the very front or back, though; the seats with
+;; IDs +1 and -1 from yours will be in your list.
+;; 
+;; What is the ID of your seat?
 
+(defn seats []
+  (into {}
+        (for [row  (range 128)
+              seat (range 8)
+              :let [id (seat-id row seat)]]
+          {id [row seat]})))
+
+(defn my-seat? [ticketed-seats this-seat]
+  (and (boolean (get ticketed-seats (- this-seat 1)))
+       (boolean (get ticketed-seats (+ this-seat 1)))))
+
+(defn part-2 [tickets]
+  (let [all-seats (seats)
+        ticketed-seats (into {} (map parse-ticket tickets))
+        possible-seats (difference (set (keys all-seats))
+                                   (set (keys ticketed-seats)))]
+    (first (filter (partial my-seat? ticketed-seats) possible-seats))))
+
+; (def ticket "FBFBBFFRLR")
 ; (parse-ticket "BFFFBBFRRR")
 ; (part-1 (get-input "day5-example-input.txt"))
 ; (part-1 (get-input "day5-input.txt"))
+; (part-2 (get-input "day5-input.txt"))

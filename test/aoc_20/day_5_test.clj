@@ -30,3 +30,15 @@
              (d5/parse-ticket "FFFBBBFRRR") => {119 [14 7]}
              (d5/parse-ticket "BBFFBBFRLL") => {820 [102 4]}
              (d5/parse-ticket "FBFBBFFRLR") => {357 [44 5]}))
+
+(facts "about 'my-seat?'"
+       (fact "should be true if the id +1 and -1 exist"
+             (d5/my-seat? {2 [1 2]
+                           3 [3 4]
+                           4 [5 6]} 3) => true)
+       (fact "should be false if either of the +1 or the -1 don't exist"
+             (d5/my-seat? {3 [3 4]
+                           4 [5 6]} 3) => false
+             (d5/my-seat? {2 [1 2]
+                           3 [3 4]} 3) => false
+             (d5/my-seat? {3 [3 4]} 3) => false))
