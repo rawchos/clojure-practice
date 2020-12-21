@@ -1,5 +1,6 @@
 (ns aoc-20.day-6
-  (:require [aoc-20.util :as util]))
+  (:require [aoc-20.util :as util]
+            [clojure.string :as s]))
 
 (defn read-lines [filename]
   (util/read-lines filename))
@@ -67,3 +68,15 @@
 ;; 
 ;; For each group, count the number of questions to which anyone answered
 ;; "yes". What is the sum of those counts?
+(defn count-batch [batch]
+  (-> (s/replace batch #"\n" "")
+      (s/split #"")
+      (set)
+      (count)))
+
+(defn part-1 [batches]
+  (->> (s/split batches #"\n\n")
+       (map count-batch)
+       (reduce +)))
+
+; (part-1 (read-input "day6-input.txt"))
