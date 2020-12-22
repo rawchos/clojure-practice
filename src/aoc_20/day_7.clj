@@ -61,6 +61,26 @@
   (when-let [[_ descr] (re-find #"\d+ (\w+ \w+) bag.*" rule)]
     (descr->keyword descr)))
 
+(defn in? [coll item]
+  (some #(= item %) coll))
+
+;; TODO: This probably isn't the most efficient. We do a lot of the
+;; work multiple times. May come back and revisit at some point.
+(defn has-path? 
+  "This function will check to see if the description passed in
+   (in the form of a keyword) has a path to :shiny-gold. It returns
+   either true or nil."
+  [rules descr]
+  (when-let [allowed (descr rules)]
+    (if (in? allowed :shiny-gold)
+      true
+      (loop [bags allowed]
+        (if-let [bag (first bags)]
+          (if (has-path? rules bag)
+            true
+            (recur (rest bags)))
+          false)))))
+
 (defn parse-rule [line]
   (let [[container containees] (s/split line #" contain ")
         [_ descr] (re-find #"(\w+ \w+) bags" container)]
@@ -69,5 +89,11 @@
            (->> (map add-rule (s/split containees #", "))
                 (remove nil?)))}))
 
-; (def line "light red bags contain 1 bright white bag, 2 muted yellow bags.")
-; (def line2 "aded blue bags contain no other bags")
+(defn part-1 [input]
+  (let [rules (into {} (map parse-rule input))]
+    (->> (for [descr (keys rules)] (has-path? rules descr))
+         (filter #(= true %))
+         (count))))
+
+; (part-1 (read-lines "day7-example-input.txt"))
+; (part-1 (read-lines "day7-input.txt"))
