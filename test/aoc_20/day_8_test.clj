@@ -34,3 +34,9 @@
        (fact "should verify whether an item is in a collection"
              (d8/in? [0 1 2 4] 3) => false
              (d8/in? [0 1 2 4] 1) => true))
+
+(facts "about 'flip-instruction'"
+       (fact "should flip jmp to nop"
+             (d8/flip-instruction "jmp +3") => "nop +3")
+       (fact "should flip nop to jmp"
+             (d8/flip-instruction "nop +0") => "jmp +0"))

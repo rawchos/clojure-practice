@@ -1,5 +1,6 @@
 (ns aoc-20.day-8
-  (:require [aoc-20.util :as util]))
+  (:require [aoc-20.util :as util]
+            [clojure.string :as s]))
 
 (defn read-lines [filename]
   (util/read-lines filename))
@@ -156,3 +157,40 @@
 ;; Fix the program so that it terminates normally by changing exactly one
 ;; jmp (to nop) or nop (to jmp). What is the value of the accumulator after
 ;; the program terminates?
+
+(defn flip-instruction [instruction]
+  (let [[_ k] (re-find #"^(jmp|nop) .*" instruction)]
+    (case (keyword k)
+      :jmp (s/replace instruction #"jmp" "nop")
+      :nop (s/replace instruction #"nop" "jmp")
+      instruction)))
+
+(defn attempt-run [instructions flip-line]
+  (loop [{:keys [instruction-line
+                 accumulator
+                 processed-instructions] :as state} {:instruction-line 0
+                                                     :processed-instructions []
+                                                     :accumulator 0}]
+    (cond
+      (>= instruction-line (count instructions)) {:completed true :accumulator accumulator}
+      (in? processed-instructions instruction-line) {:completed false :accumulator nil}
+      :else (let [next-line (nth instructions instruction-line)
+                  next-instruction (if (= flip-line instruction-line)
+                                     (flip-instruction next-line)
+                                     next-line)]
+              (recur (process-instruction state next-instruction))))))
+
+(defn part-2 [instructions]
+  (let [possible-flips (->> (map-indexed (fn [idx line]
+                                           (when (re-find #"^jmp|nop .*" line) idx))
+                                         instructions)
+                            (remove nil?))]
+    (loop [possible-flips possible-flips]
+      (when-let [flip-line (first possible-flips)]
+        (let [{:keys [completed accumulator]} (attempt-run instructions flip-line)]
+          (if completed
+            accumulator
+            (recur (rest possible-flips))))))))
+
+; (part-2 (read-lines "day8-example-input.txt"))
+; (part-2 (read-lines "day8-input.txt"))
