@@ -44,22 +44,20 @@
 ;; What is the number of 1-jolt differences multiplied by the number of
 ;; 3-jolt differences?
 
-(defn addto-last [coll amt]
-  (->> (last coll)
-       (+ amt)
-       (conj (vec coll))))
+(defn add-defaults [coll min plus-max]
+  (conj coll min (+ plus-max (apply max coll))))
+
+(defn joltages [adapters]
+  (map (fn [[x y]]
+         (- y x)) (partition 2 1 adapters)))
 
 (defn part-1 [input]
-  (let [jolts (-> (sort input)
-                  (addto-last 3))
-        freqs (-> (for [idx (range (count jolts))]
-                    (if (= 0 idx)
-                      (first jolts)
-                      (- (nth jolts idx)
-                         (nth jolts (dec idx)))))
-                  (frequencies))]
-    (* (get freqs 1)
-       (get freqs 3))))
+  (let [{ones   1
+         threes 3} (-> (add-defaults input 0 3)
+                       (sort)
+                       (joltages)
+                       (frequencies))]
+    (* ones threes)))
 
 ; (part-1 (input-from-file "day10-example-input.txt"))
 ; (part-1 (input-from-file "day10-input.txt"))
