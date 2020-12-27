@@ -61,3 +61,26 @@
 
 ; (part-1 (input-from-file "day10-example-input.txt"))
 ; (part-1 (input-from-file "day10-input.txt"))
+
+;; Use memoize here because some operations would otherwise be
+;; performed multiple times. This makes it sooooo much quicker
+;; and more efficient.
+(def count-variations 
+  (memoize
+   (fn
+     ([_] 1)
+     ([x y & z]
+      (if (> (+ x y) 3)
+        (apply count-variations y z)
+        (+ (apply count-variations y z)
+           (apply count-variations (+ x y) z)))))))
+
+(defn part-2 [input]
+  (->> (add-defaults input 0 3)
+       (sort)
+       (joltages)
+       (apply count-variations)))
+
+; (part-2 (input-from-file "day10-example-input.txt"))
+; (part-2 (input-from-file "day10-input.txt"))
+
