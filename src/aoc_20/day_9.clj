@@ -139,3 +139,40 @@
 ;; producing 62.
 ;; 
 ;; What is the encryption weakness in your XMAS-encrypted list of numbers?
+
+(defn small-and-large [numbers]
+  (let [sorted (sort numbers)]
+    [(first sorted) (last sorted)]))
+
+(defn add-to [numbers target-amount]
+  (loop [total (first numbers)
+         remaining (rest numbers)
+         idx 1]
+    (if-let [this-amount (first remaining)]
+      (let [current-total (+ total this-amount)]
+        (cond
+          (= target-amount current-total) (apply +
+                                                 (small-and-large
+                                                  (subvec numbers 0 (inc idx))))
+          (> current-total target-amount) nil
+          :else (recur current-total (rest remaining) (inc idx))))
+      nil)))
+
+(defn part-2 [input preamble]
+  (let [target-amount (part-1 input preamble)
+        all-numbers (into [] (for [number input]
+                               (Long/parseLong number)))
+        target-idx (->> (map-indexed (fn [idx amount]
+                                       (when (= target-amount amount)
+                                         idx)) all-numbers)
+                        (remove nil?)
+                        (first))
+        possibles (subvec all-numbers 0 target-idx)]
+    (loop [indexes (range (count possibles))]
+      (let [idx (first indexes)]
+        (if-let [amt (add-to (subvec possibles idx) target-amount)]
+          amt
+          (recur (rest indexes)))))))
+
+; (part-2 (read-lines "day9-example-input.txt") 5)
+; (part-2 (read-lines "day9-input.txt") 25)
