@@ -34,7 +34,40 @@
     (nth directions (+ turns
                        (first-index-of current directions)))))
 
-(defn process-instruction [state instruction])
+(def op-map {:N :north
+             :S :south
+             :W :west
+             :E :east
+             :F :facing
+             :L :left
+             :R :right})
+
+(defn get-amount [state operation]
+  (let [operation-key (operation op-map)]
+    [operation-key (operation-key state)]))
+
+(defn adjust-total [state operation amount]
+  (let [[op-key current-amount] (get-amount state operation)]
+    (assoc state op-key (+ current-amount amount))))
+
+(defn to-int [number]
+  (Integer/parseInt number))
+
+;; TODO: Slight misunderstanding here so needs some rework. If at north 3,
+;; south +11 would put us at south 8 (have to move the 3 down from north
+;; first). Not just adding amounts together.
+(defn process-instruction [{:keys [facing] :as state}
+                           instruction]
+  (let [[_ operation str-amount] (re-find #"^(\w)?(\d+)$" instruction)
+        op-key (keyword operation)
+        amount (to-int str-amount)]
+    (cond
+      (#{:N :E :S :W} op-key) (adjust-total state op-key amount)
+      (= :F op-key) (let [current-amount (facing state)]
+                      (assoc state facing (+ current-amount amount)))
+      (#{:L :R} op-key) (assoc state
+                               :facing
+                               (rotate facing (op-key op-map) amount)))))
 
 (defn part-1 [input]
   (reduce process-instruction {:facing :east
@@ -43,5 +76,10 @@
                                :east   0
                                :west   0} input))
 
-; (rotate :west :right 270)
+(def example ["F10"
+              "N3"
+              "F7"
+              "R90"
+              "F11"])
 
+; (part-1 (read-lines "day12-example-input.txt"))
