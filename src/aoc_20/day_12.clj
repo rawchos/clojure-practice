@@ -81,6 +81,11 @@
       (#{:L :R} op-key) (assoc state
                                :facing (rotate facing (op-key op-map) amount)))))
 
+;; Note: So, with this implementation, I think I went a little bit
+;; overboard on tracking north, south, east, west and trying to keep
+;; them in sync with each other. Would've been easier to just track
+;; x and y and let north and east increase them while south and west
+;; decrease them. Oh well, maybe I'll do that for part 2.
 (defn part-1 [input]
   (let [{:keys [north
                 south
