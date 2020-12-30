@@ -46,17 +46,8 @@
   (let [operation-key (operation op-map)]
     [operation-key (operation-key state)]))
 
-; (defn adjust-total [state operation amount]
-;   (let [[op-key current-amount] (get-amount state operation)]
-;     (assoc state op-key (+ current-amount amount))))
-
 (defn to-int [number]
   (Integer/parseInt number))
-
-(defn adjust-total [amount this-side opposite-side]
-  (if (pos? this-side)
-    (+ amount this-side)
-    (Math/abs (- opposite-side amount))))
 
 (defn opposite-direction [direction]
   (case direction
@@ -65,40 +56,30 @@
     :north :south
     :south :north))
 
-;; TODO: You probably don't always update the other direction to zero.
-;; If south is at 20 and you move north 10, you're still on the south
-;; side. Need a function to perform the update and check both
-;; directions.
-(defn process-instruction [{:keys [facing
-                                   north
-                                   south
-                                   east
-                                   west] :as state}
+(defn adjust-total [state direction amount]
+  (let [opposite     (opposite-direction direction)
+        this-amount  (direction state)
+        other-amount (opposite state)]
+    (if (pos? this-amount)
+      (assoc state direction (+ amount this-amount))
+      (let [new-amount (- other-amount amount)]
+        (if (pos? new-amount)
+          (assoc state
+                 opposite new-amount)
+          (assoc state
+                 opposite 0
+                 direction (Math/abs new-amount)))))))
+
+(defn process-instruction [{:keys [facing] :as state}
                            instruction]
   (let [[_ operation str-amount] (re-find #"^(\w)?(\d+)$" instruction)
         op-key (keyword operation)
         amount (to-int str-amount)]
-    (case op-key
-      :N (assoc state
-                :north (adjust-total amount north south)
-                :south 0)
-      :S (assoc state
-                :south (adjust-total amount south north)
-                :north 0)
-      :E (assoc state
-                :east (adjust-total amount east west)
-                :west 0)
-      :W (assoc state
-                :west (adjust-total amount west east)
-                :east 0)
-      :F (let [current-amount (facing state)
-               opposite-key (opposite-direction facing)]
-           (assoc state
-                  facing (adjust-total amount
-                                       current-amount
-                                       (opposite-key state))
-                  opposite-key 0))
-      (assoc state :facing (rotate facing (op-key op-map) amount)))))
+    (cond
+      (#{:N :S :E :W} op-key) (adjust-total state (op-key op-map) amount)
+      (= :F op-key) (adjust-total state facing amount)
+      (#{:L :R} op-key) (assoc state
+                               :facing (rotate facing (op-key op-map) amount)))))
 
 (defn part-1 [input]
   (let [{:keys [north
@@ -112,7 +93,7 @@
     (+ (+ north south)
        (+ east west))))
 
-(part-1 (read-lines "day12-example-input.txt"))
-(part-1 (read-lines "day12-input.txt"))
+; (part-1 (read-lines "day12-example-input.txt"))
+; (part-1 (read-lines "day12-input.txt"))
 
 
