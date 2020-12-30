@@ -4,6 +4,8 @@
 (defn read-lines [filename]
   (util/read-lines filename))
 
+;; -- Part 1 --
+
 ;; Legend:
 ;;  - Action N means to move north by the given value.
 ;;  - Action S means to move south by the given value.
@@ -101,4 +103,73 @@
 ; (part-1 (read-lines "day12-example-input.txt"))
 ; (part-1 (read-lines "day12-input.txt"))
 
+;; -- Part 2 --
 
+;; Updated Legend:
+;; - Action N means to move the waypoint north by the given value.
+;; - Action S means to move the waypoint south by the given value.
+;; - Action E means to move the waypoint east by the given value.
+;; - Action W means to move the waypoint west by the given value.
+;; - Action L means to rotate the waypoint around the ship left
+;;   (counter-clockwise) the given number of degrees.
+;; - Action R means to rotate the waypoint around the ship right
+;;   (clockwise) the given number of degrees.
+;; - Action F means to move forward to the waypoint a number of times
+;;   equal to the given value.
+
+(defn rotate-waypoint [waypoint direction degrees]
+  (reduce-kv (fn [m k v]
+               (assoc m (rotate k direction degrees) v))
+             {}
+             waypoint))
+
+(defn advance [{:keys [waypoint x y] :as state}
+               amount]
+  (reduce-kv (fn [m k v]
+               (let [update-amount (if (#{:north :east} k)
+                                     (* amount v)
+                                     (* amount v -1))]
+                 (if (#{:north :south} k)
+                   (assoc m :x (+ x update-amount))
+                   (assoc m :y (+ y update-amount)))))
+             state
+             waypoint))
+
+(defn adjust-waypoint [waypoint direction amount]
+  (let [opposite     (opposite-direction direction)
+        this-amount  (get waypoint direction 0)
+        other-amount (get waypoint opposite 0)]
+    (if (pos? this-amount)
+      (assoc waypoint direction (+ amount this-amount))
+      (let [new-amount (- other-amount amount)]
+        (if (pos? new-amount)
+          (-> (assoc waypoint
+                     opposite new-amount)
+              (dissoc direction))
+          (-> (assoc waypoint
+                 direction (Math/abs new-amount))
+              (dissoc opposite)))))))
+
+(defn p2-process-instruction [{:keys [waypoint] :as state}
+                              instruction]
+  (let [[_ operation str-amount] (re-find #"^(\w)?(\d+)$" instruction)
+        op-key (keyword operation)
+        amount (to-int str-amount)]
+    (cond
+      (#{:N :S :E :W} op-key) (assoc state
+                                     :waypoint (adjust-waypoint waypoint (op-key op-map) amount))
+      (= :F op-key) (advance state amount)
+      (#{:L :R} op-key) (assoc state
+                               :waypoint (rotate-waypoint waypoint
+                                                          (op-key op-map)
+                                                          amount)))))
+(defn part-2 [input]
+  (let [{:keys [x y]} (reduce p2-process-instruction {:waypoint {:north 1
+                                                                  :east 10}
+                                                       :x 0
+                                                       :y 0} input)]
+    (+ (Math/abs x)
+       (Math/abs y))))
+
+; (part-2 (read-lines "day12-example-input.txt"))
+; (part-2 (read-lines "day12-input.txt"))

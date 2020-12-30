@@ -24,3 +24,42 @@
          (fact "should find the correct index"
                (d12/first-index-of :two things) => 1
                (d12/first-index-of :four things) => 3)))
+
+(facts "about 'rotate-waypoint'"
+       (fact "should rotate the waypoint the given number of degrees"
+             (d12/rotate-waypoint {:north 30
+                                   :east 25} :left 90) => {:west 30
+                                                           :north 25}
+             (d12/rotate-waypoint {:north 30
+                                   :east 25} :right 90) => {:east 30
+                                                            :south 25}))
+
+(facts "about 'advance'"
+       (fact "should advance to the waypoint n times"
+             (d12/advance {:waypoint {:north 30
+                                      :east 20}
+                           :x 0
+                           :y 0} 4) => {:waypoint {:north 30
+                                                   :east 20}
+                                        :x 120
+                                        :y 80}
+             (d12/advance {:waypoint {:north 5
+                                      :west 10}
+                           :x 10
+                           :y 5} 3) => {:waypoint {:north 5
+                                                   :west 10}
+                                        :x 25
+                                        :y -25}
+             (d12/advance {:waypoint {:south 10
+                                      :east 5}
+                           :x 20
+                           :y 0} 10) => {:waypoint {:south 10
+                                                    :east 5}
+                                         :x -80
+                                         :y 50}))
+
+(facts "about 'adjust-waypoint'"
+       (fact "should adjust the waypoint based on the direction"
+             (d12/adjust-waypoint {:north 10 :east 5} :south 5) => {:north 5 :east 5}
+             (d12/adjust-waypoint {:north 15 :east 10} :west 25) => {:north 15 :west 15}
+             (d12/adjust-waypoint {:north 5 :east 10} :north 5) => {:north 10 :east 10}))
