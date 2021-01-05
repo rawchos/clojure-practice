@@ -21,17 +21,28 @@
     (- (dec turn) most-recent)
     0))
 
-(defn part-1 [input]
+(defn run-til [input stop-at]
   (loop [[last-turn
          last-number
          all-numbers] (primer input)]
     (let [this-turn (inc last-turn)
           this-number (next-number last-number this-turn all-numbers)]
-      (if (= 2020 this-turn)
+      (if (= stop-at this-turn)
         this-number
         (recur [this-turn
                this-number
                (assoc all-numbers last-number last-turn)])))))
 
+(defn part-1 [input]
+  (run-til input 2020))
+
 ; (part-1 example-input)
 ; (part-1 puzzle-input)
+
+;; -- Part 2 --
+
+(defn part-2 [input]
+  (run-til input 30000000))
+
+; (part-2 example-input)
+; (part-2 puzzle-input)
