@@ -49,7 +49,7 @@
 (defn parse-input [str-input]
   (let [[rules my-ticket nearby-tickets] (s/split str-input #"\n\n")]
     [(parse-rules (split-lines rules))
-     (tickets-only my-ticket)
+     (vec (first (tickets-only my-ticket)))
      (tickets-only nearby-tickets)]))
 
 (defn valid-ranges [rules]
@@ -72,7 +72,52 @@
          (remove (partial valid-field? rules))
          (reduce +))))
 
-; (def example-str (read-str "day16-example-input.txt"))
-
 ; (part-1 (read-str "day16-example-input.txt"))
 ; (part-1 (read-str "day16-input.txt"))
+
+;; -- Part 2 --
+
+(defn valid-ticket? [rules ticket]
+  (->> (map (partial valid-field? rules) ticket)
+       (filter #(= false %))
+       (count)
+       (zero?)))
+
+(defn rule-applies? [field [_ [[min1 max1] [min2 max2]]]]
+  (or
+   (<= min1 field max1)
+   (<= min2 field max2)))
+
+(defn applicable-rules 
+  "We're going to be taking all values of a particular field
+   at the same time and narrowing down the applicable rules as
+   much as possible."
+  [rules field]
+  (reduce
+   (fn [rules field]
+     (filter #(rule-applies? field %) rules))
+   (for [[descr ranges] rules] [descr ranges])
+   field))
+
+(defn assoc-unique [m [keys value]]
+  (let [[unique] (remove m keys)]
+    (assoc m unique value)))
+
+;; Note: This was pretty difficult for me. Probably the toughest one
+;;       so far. Probably should come back to it and see if I can
+;;       refine it but I'm happy with just continuing on for now.
+(defn part-2 [str-input]
+  (let [[rules my-ticket nearby-tickets] (parse-input str-input)]
+    (->> (filter (partial valid-ticket? rules) nearby-tickets)
+         (apply map vector)
+         (map-indexed (fn [idx number]
+                        [(applicable-rules rules number) idx]))
+         (sort-by (fn [[rules _]] (count rules)))
+         (reduce assoc-unique {})
+         (filter (fn [[[descr] _]]
+                   (s/starts-with? (name descr) "departure")))
+         (map (fn [[_ idx]] (my-ticket idx)))
+         (reduce *))))
+
+; (part-2 (read-str "day16-example-input.txt"))
+; (part-2 (read-str "day16-input.txt"))
