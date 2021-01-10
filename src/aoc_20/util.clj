@@ -12,3 +12,13 @@
    then parse through, rather than reading each line."
   [filename]
   (slurp (str "src/aoc_20/inputs/" filename)))
+
+(defn to-int 
+  "Convenience method for coercing a string to an int."
+  [s]
+  (Integer/parseInt s))
+
+(defn to-long 
+  "Convenience method for coercing a string to a long."
+  [s]
+  (Long/parseLong s))
