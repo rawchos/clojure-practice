@@ -10,3 +10,5 @@ pom.xml.asc
 /.nrepl-port
 /simulate/data
 /.calva
+/.clj-kondo
+/.lsp
