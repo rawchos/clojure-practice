@@ -5,6 +5,10 @@
 (defn read-str [filename]
   (util/read-str filename))
 
+;; Note: I needed a little help on this one. I struggled on it.
+
+;; -- Part 1 --
+
 (defn split-input [str-input]
   (s/split str-input #"\n\n"))
 
