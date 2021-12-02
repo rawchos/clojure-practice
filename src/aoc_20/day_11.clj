@@ -1,5 +1,5 @@
 (ns aoc-20.day-11
-  (:require [aoc-20.util :as util]
+  (:require [aoc-utils.core :as util]
             [clojure.string :as s]))
 
 ;; Legend:

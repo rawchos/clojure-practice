@@ -1,7 +1,7 @@
 (ns aoc-20.day-5
   (:require [clojure.set :refer [difference]]
             [clojure.string :as s]
-            [aoc-20.util :as util]))
+            [aoc-utils.core :as util]))
 
 (defn read-input [filename]
   (slurp (str "src/aoc_20/inputs/" filename)))

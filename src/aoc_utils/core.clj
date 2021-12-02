@@ -1,4 +1,4 @@
-(ns aoc-20.util
+(ns aoc-utils.core
   (:require [clojure.java.io :as io]))
 
 (defn read-lines 

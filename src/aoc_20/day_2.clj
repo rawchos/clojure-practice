@@ -1,6 +1,5 @@
 (ns aoc-20.day-2
-  (:require [aoc-20.util :as util]
-            [clojure.string :as s]))
+  (:require [clojure.string :as s]))
 
 ;; --- Day 2: Password Philosophy ---
 ;; Your flight departs in a few days from the coastal airport; the easiest
@@ -115,7 +114,3 @@
 (def day2-example-input ["1-3 a: abcde"
                          "1-3 b: cdefg"
                          "2-9 c: ccccccccc"])
-
-; (util/read-lines "day2-input.txt")
-; (part-1 (util/read-lines "day2-input.txt"))
-; (part-2 (util/read-lines "day2-input.txt"))

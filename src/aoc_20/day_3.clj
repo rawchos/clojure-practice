@@ -1,6 +1,6 @@
 (ns aoc-20.day-3
   (:require [clojure.string :as s]
-            [aoc-20.util :as util]))
+            [aoc-utils.core :as util]))
 
 ;; --- Day 3: Toboggan Trajectory ---
 ;; With the toboggan login problems resolved, you set off toward the

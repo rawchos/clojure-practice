@@ -1,5 +1,5 @@
 (ns aoc-20.day-17
-  (:require [aoc-20.util :as util]))
+  (:require [aoc-utils.core :as util]))
 
 (defn read-lines [filename]
   (vec (util/read-lines filename)))
