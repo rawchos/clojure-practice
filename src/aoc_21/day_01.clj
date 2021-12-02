@@ -30,7 +30,7 @@
   (part-1 sample-readings)
 
   (part-1 (get-input)) ; 1482
-  (part-1 (p2-input))
+  (part-1 (p2-input))  ; 1518
 
   (def my-input (get-input))
   (->> (partition 3 1 sample-readings)
