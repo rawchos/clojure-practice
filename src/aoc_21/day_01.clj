@@ -12,7 +12,7 @@
        (partition 3 1)
        (map #(reduce + %))))
 
-(defn part-1 [readings]
+(defn count-increases [readings]
   (-> (reduce (fn [{:keys [previous-reading] :as state} reading]
                 (let [new-state (assoc state :previous-reading reading)]
                   (cond
@@ -27,13 +27,13 @@
 
 (comment
   (util/read-lines "21" "day1.txt")
-  (part-1 sample-readings)
+  (count-increases sample-readings)
 
-  (part-1 (get-input)) ; 1482
-  (part-1 (p2-input))  ; 1518
+  (count-increases (get-input)) ; 1482
+  (count-increases (p2-input))  ; 1518
 
   (def my-input (get-input))
   (->> (partition 3 1 sample-readings)
        (map #(reduce + %))
-       (part-1))
+       (count-increases))
   )
