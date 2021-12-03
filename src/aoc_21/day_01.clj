@@ -4,7 +4,7 @@
 (def sample-readings [199 200 208 210 200 207 240 269 260 263])
 
 (defn get-input []
-  (->> (util/read-lines "21" "day1.txt")
+  (->> (util/read-lines "21" "day01.txt")
        (map util/to-int)))
 
 (defn p2-input []
@@ -26,7 +26,7 @@
       :increased))
 
 (comment
-  (util/read-lines "21" "day1.txt")
+  (util/read-lines "21" "day01.txt")
   (count-increases sample-readings)
 
   (count-increases (get-input)) ; 1482
