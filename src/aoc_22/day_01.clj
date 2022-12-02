@@ -12,7 +12,7 @@
 (comment
   (def the-input (utils/read-lines "22" "day01.txt"))
   
-  ; part 1
+  ; part 1 => 72017
   (->> the-input
        (partition-by str/blank?)
        (remove (partial every? str/blank?))
@@ -20,7 +20,7 @@
        sort
        last)
 
-  ; part 2
+  ; part 2 => 212520
   (->> the-input
        (partition-by str/blank?)
        (remove (partial every? str/blank?))
