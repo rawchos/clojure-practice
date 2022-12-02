@@ -70,4 +70,6 @@
   (part-2 sample-readings)
   (part-2 (get-input)) ; 4412188
   
+  (+ 160.21 62.79)
+  
   )
