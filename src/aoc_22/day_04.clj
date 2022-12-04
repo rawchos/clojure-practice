@@ -33,11 +33,10 @@
        (filter true?)
        count)
   
-  ; part2 => 
+  ; part2 => 883
   (->> (read-input)
        (map parse-schedule)
        (map has-overlap?)
        (filter true?)
        count)
-  
   )
