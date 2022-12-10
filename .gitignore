@@ -12,3 +12,6 @@ pom.xml.asc
 /.calva
 /.clj-kondo
 /.lsp
+
+# Ignore input files for Advent of Code
+/src/aoc_22/inputs
