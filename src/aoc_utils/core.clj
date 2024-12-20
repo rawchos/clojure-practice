@@ -6,7 +6,9 @@
   ([input-file]
    (read-lines "20" input-file))
   ([aoc-year input-file]
-   (with-open [rdr (io/reader (str "src/aoc_" aoc-year "/inputs/" input-file))]
+   (with-open [rdr (-> (str "aoc_" aoc-year "/" input-file)
+                       io/resource
+                       io/reader)]
      (doall (line-seq rdr)))))
 
 (defn read-str
@@ -15,7 +17,9 @@
   ([filename]
    (read-str "20" filename))
   ([aoc-year filename]
-   (slurp (str "src/aoc_" aoc-year "/inputs/" filename))))
+   (-> (str "aoc_" aoc-year "/" filename)
+       io/resource
+       slurp)))
 
 (defn to-int 
   "Convenience method for coercing a string to an int."
