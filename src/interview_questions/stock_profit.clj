@@ -64,7 +64,7 @@
        (group-by :host)
        (log-stats (format "records_%s" filename))))
 
-(process-file "test_log_file.txt")
+; (process-file "test_log_file.txt")
 
 ;; Updated with data from hackerrank:
 (comment 
