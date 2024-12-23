@@ -1,11 +1,9 @@
 (ns interview-questions.string-pairs-test
   (:require [interview-questions.string-pairs :as sp]
-            [midje.sweet :refer [fact
-                                 facts
-                                 =>]]))
+            [clojure.test :refer [deftest is testing]]))
 
-(facts "about 'string-pairs.solution'"
-       (fact "should split even numbered strings equally"
-             (sp/solution "blah") => ["bl" "ah"])
-       (fact "should add an underscore for odd numbered strings"
-             (sp/solution "blahh") => ["bl" "ah" "h_"]))
+(deftest string-pairs.solution-test
+       (testing "should split even numbered strings equally"
+             (is (= (sp/solution "blah") ["bl" "ah"])))
+       (testing "should add an underscore for odd numbered strings"
+             (is (= (sp/solution "blahh") ["bl" "ah" "h_"]))))
